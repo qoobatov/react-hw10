@@ -39,11 +39,9 @@ export const ProductList = () => {
               description={<div>{item.price}</div>}
             />
               <DeleteOutlined 
-                onClick={deleteItem(item.id)}
-                style={{
-                  width:'20%',
-                 
-                }}
+                onClick={()=>{deleteItem(item.id)}
+              
+                }
               />
           </List.Item>
         )}
