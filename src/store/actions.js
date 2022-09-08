@@ -39,6 +39,7 @@ export const createProduct = (payload) => {
     try {
       const response = await axios.post(`${BASE_API_URL}/products/create`, payload);
       console.log('response', response)
+      console.log('payload', payload);
       if (response.status === 201) {
         dispatch(fetchProducts())
       }
@@ -54,7 +55,7 @@ export const deleteProduct = (id) => {
     try {
       const response = await axios.delete(`${BASE_API_URL}/products/delete/${id}`);
       console.log('response', response)
-      if (response.status === 201) {
+      if (response.status === 204) {
         dispatch(fetchProducts())
       }
       console.log(response.data)

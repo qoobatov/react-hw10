@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input,Upload, } from "antd";
 import { createProduct } from '../../store/actions';
+import { PlusOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import {  Modal } from 'antd';
 
@@ -72,7 +73,7 @@ export const CreateProduct = () => {
 
         <Form.Item
           label="Price"
-         
+          
           name="price"
           
           rules={[
@@ -85,11 +86,34 @@ export const CreateProduct = () => {
           <Input />
         </Form.Item>
 
+        <Form.Item label="Upload"  name="image">
+          <Upload action="/upload.do" listType="picture-card">
+            <div>
+              <PlusOutlined />
+              <div
+                style={{
+                  marginTop: 8,
+                }}
+              >
+                Upload
+              </div>
+            </div>
+          </Upload>
+        </Form.Item>
+        <Form.Item label="Button">
+          <Button>Button</Button>
+        </Form.Item>
         <Form.Item>
+
+
+
+          
+
           <Button onClick={handleOk} type="primary" htmlType="submit"   >
             Save
           </Button>
         </Form.Item>
+        
       </Form>
       </Modal>
       

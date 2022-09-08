@@ -13,13 +13,14 @@ export const ProductList = () => {
 
   useEffect(() => {
     dispatch(fetchProducts())
-
+    
   }, [])
 
   const deleteItem = (values)=>{
     dispatch(deleteProduct(values))
-    
     console.log(values)
+    
+    
   }
 
   console.log('products', products)
