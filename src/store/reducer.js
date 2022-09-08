@@ -1,6 +1,7 @@
 import { 
   FETCH_PRODUCTS, 
-  RECEIVE_PRODUCTS 
+  RECEIVE_PRODUCTS,
+  DELETE_PRODUCTS
 } from './actions';
 
 const initialState = {
@@ -21,6 +22,11 @@ export default function reducer(state = initialState, action) {
         ...state,
         productsLoading: false,
         products: action.payload
+      }
+    case DELETE_PRODUCTS: 
+      return {
+        ...state,
+        products: state.products.filter((id)=>id!==action.payload)
       }
     
     default:

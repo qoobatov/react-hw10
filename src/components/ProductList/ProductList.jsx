@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Avatar, List, Spin } from 'antd';
 import {fetchProducts} from './../../store/actions'
+import {deleteProduct} from './../../store/actions'
 import { CreateProduct } from '../ProductForm/CreateProduct';
+import { DeleteOutlined } from '@ant-design/icons';
 
 export const ProductList = () => {
   const dispatch = useDispatch();
@@ -13,10 +15,16 @@ export const ProductList = () => {
     dispatch(fetchProducts())
   }, [])
 
+  const deleteItem = (values)=>{
+    dispatch(deleteProduct())
+    console.log(values)
+  }
+
   console.log('products', products)
   
   return (
     <div>
+      
       <CreateProduct />
       <h1>Products</h1>
       <List
@@ -30,6 +38,13 @@ export const ProductList = () => {
               title={<a href="https://ant.design">{item.name}</a>}
               description={<div>{item.price}</div>}
             />
+              <DeleteOutlined 
+                onClick={deleteItem(item.id)}
+                style={{
+                  width:'20%',
+                 
+                }}
+              />
           </List.Item>
         )}
       />
