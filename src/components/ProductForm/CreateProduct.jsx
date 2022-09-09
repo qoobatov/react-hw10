@@ -1,38 +1,56 @@
-import React, {useEffect, useState} from "react";
-import { Button, Form, Input,Upload, } from "antd";
-import { createProduct } from '../../store/actions';
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input, Upload, } from "antd";
+import { createProduct, setModalState, editProducts, setEditProduct } from '../../store/actions';
 import { PlusOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
-import {  Modal } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { Modal } from 'antd';
+import Item from "antd/lib/list/Item";
 
 
 export const CreateProduct = () => {
   const dispatch = useDispatch();
-  const [form]=Form.useForm()
+  const editProduct = useSelector((store) => store.editProduct)
+  const isModalOpen = useSelector((store) => store.isModalOpen)
+  const isModalCreate = useSelector((store) => store.isModalCreate)
+  const [form] = Form.useForm()
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-    
 
-  const showModal = (e) => {
-    setIsModalOpen(true);
+  useEffect(() => {
+    if (!editProduct) return
+    form.setFieldsValue(editProduct)
+
+  }, [form, editProduct])
+
+
+
+
+  const showModal = () => {
+    dispatch(setModalState(true));
+
+  };
+
+  const closeModal = () => {
+    dispatch(setModalState(false));
+    dispatch(setEditProduct(null))
     form.resetFields()
-  };
+  }
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-    
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
 
   const onFinish = (values) => {
-    console.log("Success:", values);
-    dispatch(createProduct(values));
-    
-    
+    if (editProduct) {
+      dispatch(editProducts(values, editProduct.id))
+      dispatch(setEditProduct(null))
+    } else {
+      dispatch(createProduct(values))
+    }
+
+    setTimeout(() => {
+      form.resetFields()
+    }, 0);
+
+    dispatch(setModalState(false))
+
   };
 
   const onFinishFailed = (errorInfo) => {
@@ -40,88 +58,85 @@ export const CreateProduct = () => {
   };
 
 
+  const title = editProduct ? 'Update' : 'Create'
+  const modalTitle = editProduct ? 'Update Product' : 'Create Product'
+
+
+
 
   return (
     <div>
-       <Button type="primary" onClick={showModal}>
+      <Button type="primary" onClick={showModal}>
         Create Item
       </Button>
       <Modal
-      footer={null} title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <Form
-        form={form}
-        name="basic"
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-        
-      >
-        <Form.Item
-          label="Name"
-          
-          name="name"
-          
-          rules={[
-            {
-              required: true,
-              message: "Please input Product Name!",
-            },
-          ]}
+        footer={null} title={modalTitle} open={isModalOpen} onCancel={closeModal}>
+        <Form
+          form={form}
+          name="basic"
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+
         >
-          <Input />
-        </Form.Item>
+          <Form.Item
+            label="Name"
 
-        <Form.Item
-          label="Price"
-          
-          name="price"
-          
-          rules={[
-            {
-              required: true,
-              message: "Please input Product Price!",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+            name="name"
 
-        <Form.Item label="Upload"  name="image">
-          <Upload action="/upload.do" listType="picture-card">
-            <div>
-              <PlusOutlined />
-              <div
-                style={{
-                  marginTop: 8,
-                }}
-              >
-                Upload
-              </div>
-            </div>
-          </Upload>
-        </Form.Item>
-        <Form.Item label="Button">
-          <Button>Button</Button>
-        </Form.Item>
-        <Form.Item>
+            rules={[
+              {
+                required: true,
+                message: "Please input Product Name!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
+          <Form.Item
+            label="Price"
 
+            name="price"
 
-          
+            rules={[
+              {
+                required: true,
+                message: "Please input Product Price!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
 
-          <Button onClick={handleOk} type="primary" htmlType="submit"   >
-            Save
-          </Button>
-        </Form.Item>
-        
-      </Form>
+          <Form.Item
+            label="Image"
+            name="image"
+            valuePropName="file"
+          >
+            <Upload
+              accept=".png, .jpg"
+              listType='picture-card'
+              beforeUpload={() => false}
+              multiple={false}
+              maxCount={1}
+            >
+              <Button>Upload</Button>
+            </Upload>
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              {title}
+            </Button>
+          </Form.Item>
+        </Form>
       </Modal>
-      
-
-    
 
 
-      
+
+
+
+
     </div>
   );
 };

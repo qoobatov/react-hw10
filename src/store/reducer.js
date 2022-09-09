@@ -1,17 +1,40 @@
 import { 
   FETCH_PRODUCTS, 
   RECEIVE_PRODUCTS,
-  DELETE_PRODUCTS
+  DELETE_PRODUCTS,
+  SET_MODAL_STATE,
+  SET_MODAL_TYPE,
+  SET_PRODUCT
 } from './actions';
 
 const initialState = {
   products: [],
-  productsLoading: false
+  productsLoading: false,
+  isModalOpen: false,
+  isModalCreate: true,
+  editProduct: null
 }
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     
+    case SET_MODAL_STATE: 
+    return {
+      ...state,
+      isModalOpen: action.isOpen,
+    }
+    case SET_MODAL_TYPE: 
+    return {
+      ...state,
+      isModalCreate: action.isCreate,
+    }
+
+  case SET_PRODUCT: 
+    return {
+      ...state,
+      editProduct: action.payload,
+    }
+
     case FETCH_PRODUCTS: 
       return {
         ...state,
@@ -23,11 +46,7 @@ export default function reducer(state = initialState, action) {
         productsLoading: false,
         products: action.payload
       }
-    case DELETE_PRODUCTS: 
-      return {
-        ...state,
-        products: state.products.filter((id)=>id!==action.payload)
-      }
+  
     
     default:
       return state;
